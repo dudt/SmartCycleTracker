@@ -35,7 +35,6 @@ public struct AddHistoryCycleSheet: View {
                     Stepper("经期持续天数: \(periodLength) 天", value: $periodLength, in: 1...14)
 
                     Stepper("本周期总天数: \(cycleLength) 天", value: $cycleLength, in: 15...60)
-                        .help("从本次月经第一天，到下次月经前一天的总天数")
                 }
 
                 Section(

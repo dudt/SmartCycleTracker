@@ -117,25 +117,25 @@ public struct MainTabView: View {
                             Text("默认周期天数")
                             Spacer()
                             Stepper("\(userProfile.defaultCycleLength) 天", value: $userProfile.defaultCycleLength, in: 20...45)
-                                .onChange(of: userProfile.defaultCycleLength) { _ in saveUserProfile() }
+                                .onChange(of: userProfile.defaultCycleLength) { _, _ in saveUserProfile() }
                         }
                         HStack {
                             Text("默认经期天数")
                             Spacer()
                             Stepper("\(userProfile.defaultPeriodLength) 天", value: $userProfile.defaultPeriodLength, in: 2...10)
-                                .onChange(of: userProfile.defaultPeriodLength) { _ in saveUserProfile() }
+                                .onChange(of: userProfile.defaultPeriodLength) { _, _ in saveUserProfile() }
                         }
                         HStack {
                             Text("默认黄体期")
                             Spacer()
                             Stepper("\(userProfile.lutealPhaseLength) 天", value: $userProfile.lutealPhaseLength, in: 10...16)
-                                .onChange(of: userProfile.lutealPhaseLength) { _ in saveUserProfile() }
+                                .onChange(of: userProfile.lutealPhaseLength) { _, _ in saveUserProfile() }
                         }
                     }
 
                     Section(header: Text("隐私与安全")) {
                         Toggle("开启应用锁 (Face ID / 密码)", isOn: $userProfile.isPrivacyLockEnabled)
-                            .onChange(of: userProfile.isPrivacyLockEnabled) { _ in saveUserProfile() }
+                            .onChange(of: userProfile.isPrivacyLockEnabled) { _, _ in saveUserProfile() }
                         HStack {
                             Image(systemName: "lock.shield.fill")
                                 .foregroundColor(Theme.fertileTeal)

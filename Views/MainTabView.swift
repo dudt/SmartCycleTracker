@@ -361,3 +361,105 @@ struct HistoryCyclesListCard: View {
         .cardStyle()
     }
 }
+
+// MARK: - 选中日期摘要明细卡片
+struct SelectedDateSummaryCard: View {
+    let dateString: String
+    let dailyLog: DailyLog?
+    let onEditTap: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("📅 \(dateString) 日志明细")
+                    .font(.system(size: 15, weight: .bold))
+                Spacer()
+                Button(action: onEditTap) {
+                    Text(dailyLog == nil ? "添加打卡" : "编辑日志")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Theme.periodRuby)
+                }
+            }
+
+            if let log = dailyLog {
+                HStack(spacing: 16) {
+                    if let flow = log.flowLevel {
+                        Label("流量: Level \(flow)", systemImage: "drop.fill")
+                            .font(.system(size: 13))
+                            .foregroundColor(Theme.periodRuby)
+                    }
+
+                    if let bbt = log.bbt {
+                        Label(String(format: "%.2f℃", bbt), systemImage: "thermometer.medium")
+                            .font(.system(size: 13))
+                            .foregroundColor(Theme.fertileTeal)
+                    }
+                }
+
+                if !log.symptoms.isEmpty {
+                    Text("症状：\(log.symptoms.joined(separator: " / "))")
+                        .font(.system(size: 13))
+                        .foregroundColor(.secondary)
+                }
+
+                if !log.moods.isEmpty {
+                    Text("情绪：\(log.moods.joined(separator: " / "))")
+                        .font(.system(size: 13))
+                        .foregroundColor(.secondary)
+                }
+
+                if let notes = log.notes, !notes.isEmpty {
+                    Text("备注：\(notes)")
+                        .font(.system(size: 13))
+                        .foregroundColor(.secondary)
+                }
+            } else {
+                Text("当日暂无详细打卡，点击右上角进行添加。")
+                    .font(.system(size: 13))
+                    .foregroundColor(.secondary)
+            }
+        }
+        .cardStyle()
+    }
+}
+
+// MARK: - 统计分析概览卡片
+struct StatsOverviewCard: View {
+    let avgCycleLength: Int
+    let avgPeriodLength: Int
+    let totalCyclesCount: Int
+    let outliersCount: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("规律性概览")
+                .font(.system(size: 16, weight: .bold))
+
+            HStack {
+                StatItem(title: "平均周期", value: "\(avgCycleLength) 天")
+                Divider()
+                StatItem(title: "平均经期", value: "\(avgPeriodLength) 天")
+                Divider()
+                StatItem(title: "有效记录", value: "\(totalCyclesCount) 次")
+            }
+        }
+        .cardStyle()
+    }
+
+    private struct StatItem: View {
+        let title: String
+        let value: String
+
+        var body: some View {
+            VStack(spacing: 4) {
+                Text(title)
+                    .font(.system(size: 12))
+                    .foregroundColor(.secondary)
+                Text(value)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(Theme.periodRuby)
+            }
+            .frame(maxWidth: .infinity)
+        }
+    }
+}

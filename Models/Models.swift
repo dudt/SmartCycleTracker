@@ -7,8 +7,7 @@ public struct Cycle: Codable, Identifiable, Equatable {
     public var endDate: Date?           // 周期结束日期 (下次月经前一天)
     public var cycleLength: Int?        // 本周期总天数
     public var periodLength: Int?       // 经期持续天数
-    public var isOutlier: Bool          // 是否被标记为离群/异常周期（如生病、服药、长途旅行等）
-    public var outlierReason: String?   // 离群原因
+    public var isOutlier: Bool          // 内部算法自动判定的离群值
     public var createdAt: Date
 
     public init(
@@ -18,7 +17,6 @@ public struct Cycle: Codable, Identifiable, Equatable {
         cycleLength: Int? = nil,
         periodLength: Int? = nil,
         isOutlier: Bool = false,
-        outlierReason: String? = nil,
         createdAt: Date = Date()
     ) {
         self.id = id
@@ -27,7 +25,6 @@ public struct Cycle: Codable, Identifiable, Equatable {
         self.cycleLength = cycleLength
         self.periodLength = periodLength
         self.isOutlier = isOutlier
-        self.outlierReason = outlierReason
         self.createdAt = createdAt
     }
 }
@@ -38,9 +35,11 @@ public struct DailyLog: Codable, Identifiable, Equatable {
     public var date: String
     public var flowLevel: Int?          // 1: 少量, 2: 中等, 3: 多, 4: 特多
     public var bbt: Double?             // 基础体温 (e.g. 36.65)
+    public var waterIntake: Int?        // 饮水量 (ml)
+    public var weight: Double?          // 体重 (kg)
     public var lhTestResult: String?    // 排卵试纸结果 (negative / positive / peak)
     public var cervicalMucus: String?   // 宫颈黏液类型 (dry / sticky / creamy / eggWhite)
-    public var symptoms: [String]       // 痛经、头痛、胀痛等标签
+    public var symptoms: [String]       // 身体症状标签
     public var moods: [String]          // 情绪标签
     public var notes: String?
 
@@ -48,6 +47,8 @@ public struct DailyLog: Codable, Identifiable, Equatable {
         date: String,
         flowLevel: Int? = nil,
         bbt: Double? = nil,
+        waterIntake: Int? = nil,
+        weight: Double? = nil,
         lhTestResult: String? = nil,
         cervicalMucus: String? = nil,
         symptoms: [String] = [],
@@ -57,6 +58,8 @@ public struct DailyLog: Codable, Identifiable, Equatable {
         self.date = date
         self.flowLevel = flowLevel
         self.bbt = bbt
+        self.waterIntake = waterIntake
+        self.weight = weight
         self.lhTestResult = lhTestResult
         self.cervicalMucus = cervicalMucus
         self.symptoms = symptoms
@@ -65,22 +68,25 @@ public struct DailyLog: Codable, Identifiable, Equatable {
     }
 }
 
-// MARK: - 3. 用户生理基线参数 (UserProfile)
+// MARK: - 3. 用户生理基线参数 (UserProfile) — 无感智能推荐
 public struct UserProfile: Codable, Equatable {
-    public var defaultCycleLength: Int    // 默认周期天数 (默认 28 天)
-    public var defaultPeriodLength: Int   // 默认经期天数 (默认 5 天)
-    public var lutealPhaseLength: Int    // 默认黄体期天数 (默认 14 天)
+    public var defaultCycleLength: Int    // 算法自动得出的推荐周期天数 (默认 28 天)
+    public var defaultPeriodLength: Int   // 算法自动得出的推荐经期天数 (默认 5 天)
+    public var lutealPhaseLength: Int    // 默认黄体期天数 (14 天)
     public var isPrivacyLockEnabled: Bool
+    public var isReminderEnabled: Bool    // 来潮提醒开关
 
     public init(
         defaultCycleLength: Int = 28,
         defaultPeriodLength: Int = 5,
         lutealPhaseLength: Int = 14,
-        isPrivacyLockEnabled: Bool = false
+        isPrivacyLockEnabled: Bool = false,
+        isReminderEnabled: Bool = true
     ) {
         self.defaultCycleLength = defaultCycleLength
         self.defaultPeriodLength = defaultPeriodLength
         self.lutealPhaseLength = lutealPhaseLength
         self.isPrivacyLockEnabled = isPrivacyLockEnabled
+        self.isReminderEnabled = isReminderEnabled
     }
 }

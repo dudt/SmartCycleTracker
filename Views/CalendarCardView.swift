@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 极简交互式月历卡片组件
+/// 极简月历组件 (纯 SF Symbols 区分月经期、预测经期、排酸期、排卵日、黄体期)
 public struct CalendarCardView: View {
     @Binding var selectedDate: Date
     let predictionResult: PredictionResult?
@@ -34,6 +34,7 @@ public struct CalendarCardView: View {
             HStack {
                 Button(action: { currentMonthOffset -= 1 }) {
                     Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.primary)
                 }
 
@@ -46,6 +47,7 @@ public struct CalendarCardView: View {
 
                 Button(action: { currentMonthOffset += 1 }) {
                     Image(systemName: "chevron.right")
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.primary)
                 }
             }
@@ -81,12 +83,18 @@ public struct CalendarCardView: View {
                 }
             }
 
-            // 图例 (Legend)
-            HStack(spacing: 12) {
-                LegendItem(color: Theme.periodRuby, text: "经期")
-                LegendItem(color: Theme.periodRubySoft, text: "预测经期", isBorderOnly: true)
-                LegendItem(color: Theme.fertileTeal, text: "易孕期")
-                LegendItem(color: Theme.ovulationGold, text: "排卵日")
+            // 图例 (Legend - 无 Emoji，纯 SF Symbols 标注)
+            VStack(spacing: 8) {
+                HStack(spacing: 12) {
+                    LegendItem(icon: "drop.fill", color: Theme.periodRuby, text: "月经期")
+                    LegendItem(icon: "sparkles", color: Theme.predictedPink, text: "预测经期", isBorderOnly: true)
+                    LegendItem(icon: "leaf.fill", color: Theme.fertileTeal, text: "排酸期/易孕")
+                }
+                HStack(spacing: 12) {
+                    LegendItem(icon: "star.fill", color: Theme.ovulationGold, text: "排卵日")
+                    LegendItem(icon: "moon.fill", color: Theme.lutealPurple, text: "黄体期")
+                    LegendItem(icon: "sun.max.fill", color: Theme.safeRose, text: "安全/滤泡期")
+                }
             }
             .padding(.top, 6)
         }
@@ -108,7 +116,6 @@ public struct CalendarCardView: View {
         }
 
         var isActualPeriod: Bool {
-            // 判断是否落在已记录经期范围内
             for cycle in historyCycles {
                 let start = calendar.startOfDay(for: cycle.startDate)
                 let periodLen = cycle.periodLength ?? 5
@@ -150,17 +157,17 @@ public struct CalendarCardView: View {
                         .fill(Theme.periodRuby)
                 } else if isPredictedPeriod {
                     Circle()
-                        .strokeBorder(Theme.periodRuby, style: StrokeStyle(lineWidth: 1.5, dash: [3]))
-                        .background(Circle().fill(Theme.periodRubySoft.opacity(0.6)))
+                        .strokeBorder(Theme.predictedPink, style: StrokeStyle(lineWidth: 1.5, dash: [3]))
+                        .background(Circle().fill(Theme.predictedPinkSoft))
                 } else if isOvulationDay {
                     Circle()
-                        .fill(Theme.ovulationGold.opacity(0.85))
+                        .fill(Theme.ovulationGold)
                 } else if isFertileWindow {
                     Circle()
                         .fill(Theme.fertileTealSoft)
                 } else if isSelected {
                     Circle()
-                        .fill(Color.gray.opacity(0.2))
+                        .fill(Color.gray.opacity(0.18))
                 }
 
                 // 今日光圈
@@ -169,13 +176,13 @@ public struct CalendarCardView: View {
                         .stroke(Theme.periodRuby, lineWidth: 1.5)
                 }
 
-                // 日期文字
+                // 日期数字与小图标
                 VStack(spacing: 1) {
                     Text("\(calendar.component(.day, from: date))")
-                        .font(.system(size: 14, weight: isSelected || isToday ? .bold : .regular))
-                        .foregroundColor(isActualPeriod ? .white : (isOvulationDay ? .white : .primary))
+                        .font(.system(size: 13, weight: isSelected || isToday ? .bold : .regular))
+                        .foregroundColor(isActualPeriod || isOvulationDay ? .white : .primary)
 
-                    // 每日有记录小圆点标记
+                    // 每日有打卡标记
                     if dailyLog != nil {
                         Circle()
                             .fill(isActualPeriod ? Color.white : Theme.periodRuby)
@@ -188,29 +195,25 @@ public struct CalendarCardView: View {
     }
 
     private struct LegendItem: View {
+        let icon: String
         let color: Color
         let text: String
         var isBorderOnly: Bool = false
 
         var body: some View {
             HStack(spacing: 4) {
-                if isBorderOnly {
-                    Circle()
-                        .strokeBorder(color, style: StrokeStyle(lineWidth: 1.5, dash: [2]))
-                        .frame(width: 10, height: 10)
-                } else {
-                    Circle()
-                        .fill(color)
-                        .frame(width: 10, height: 10)
-                }
+                Image(systemName: icon)
+                    .font(.system(size: 10))
+                    .foregroundColor(color)
+
                 Text(text)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
+            .frame(maxWidth: .infinity)
         }
     }
 
-    // MARK: - 日期辅助函数
     private func monthYearString(for date: Date) -> String {
         let df = DateFormatter()
         df.dateFormat = "yyyy年 M月"
@@ -248,7 +251,6 @@ public struct CalendarCardView: View {
     }
 }
 
-/// 月历单元节点结构
 struct CalendarDayItem: Identifiable {
     let id: Int
     let date: Date?

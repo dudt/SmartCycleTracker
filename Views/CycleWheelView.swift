@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 首页核心：当前周期状态环形轮盘
+/// 核心界面：思雨经期助手状态轮盘与关怀组件 (无 Emoji，纯 SF Symbols)
 public struct CycleWheelView: View {
     let currentDayInCycle: Int
     let totalPredictedCycleLength: Int
@@ -29,6 +29,10 @@ public struct CycleWheelView: View {
         min(1.0, max(0.05, Double(currentDayInCycle) / Double(max(1, totalPredictedCycleLength))))
     }
 
+    private var advice: CareAdviceService.PhaseAdvice {
+        CareAdviceService.advice(for: phaseName)
+    }
+
     public var body: some View {
         VStack(spacing: 20) {
             // 预测区间顶部 Banner
@@ -45,49 +49,53 @@ public struct CycleWheelView: View {
                     
                     Text("智能预测下次月经：\(formatter.string(from: result.nextPeriodStartDate)) (±\(String(format: "%.1f", result.confidenceMarginDays))天)")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundColor(.primary.opacity(0.8))
+                        .foregroundColor(.primary.opacity(0.85))
                 }
-                .padding(.horizontal, 14)
+                .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 .background(Theme.periodRubySoft)
-                .cornerRadius(16)
+                .cornerRadius(18)
             }
 
             // 核心环形进度轮盘
             ZStack {
-                // 背景灰圈
+                // 背景圈
                 Circle()
-                    .stroke(Color.gray.opacity(0.12), lineWidth: 18)
+                    .stroke(Color.gray.opacity(0.1), lineWidth: 20)
                     .frame(width: 220, height: 220)
 
-                // 进度外圈 (渐变色彩)
+                // 渐变外圈
                 Circle()
                     .trim(from: 0, to: progress)
                     .stroke(
                         AngularGradient(
-                            gradient: Gradient(colors: [Theme.periodRuby, Theme.lutealPurple, Theme.fertileTeal]),
+                            gradient: Gradient(colors: [advice.themeColor, Theme.lutealPurple, Theme.fertileTeal]),
                             center: .center,
                             startAngle: .degrees(-90),
                             endAngle: .degrees(270)
                         ),
-                        style: StrokeStyle(lineWidth: 18, lineCap: .round)
+                        style: StrokeStyle(lineWidth: 20, lineCap: .round)
                     )
                     .rotationEffect(.degrees(-90))
                     .frame(width: 220, height: 220)
                     .animation(.spring(response: 0.8, dampingFraction: 0.7), value: progress)
 
                 // 轮盘中央内容
-                VStack(spacing: 6) {
-                    Text(phaseName)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(Theme.fertileTeal)
+                VStack(spacing: 8) {
+                    HStack(spacing: 4) {
+                        Image(systemName: advice.iconName)
+                            .font(.system(size: 14, weight: .semibold))
+                        Text(phaseName)
+                            .font(.system(size: 14, weight: .semibold))
+                    }
+                    .foregroundColor(advice.themeColor)
 
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text("第")
                             .font(.system(size: 16))
                             .foregroundColor(.secondary)
                         Text("\(currentDayInCycle)")
-                            .font(.system(size: 42, weight: .bold, design: .rounded))
+                            .font(.system(size: 44, weight: .bold, design: .rounded))
                             .foregroundColor(.primary)
                         Text("天")
                             .font(.system(size: 16))
@@ -99,7 +107,7 @@ public struct CycleWheelView: View {
                         .foregroundColor(.secondary)
                 }
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, 6)
 
             // 快捷记一笔 Button
             Button(action: onQuickLogTap) {
@@ -122,6 +130,24 @@ public struct CycleWheelView: View {
                 .cornerRadius(25)
                 .shadow(color: Theme.periodRuby.opacity(0.3), radius: 8, x: 0, y: 4)
             }
+
+            // 每日关怀卡片
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 6) {
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(advice.themeColor)
+                    Text("思雨健康关怀")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.primary)
+                }
+                Text(advice.summary)
+                    .font(.system(size: 13))
+                    .foregroundColor(.secondary)
+                    .lineSpacing(4)
+            }
+            .padding(14)
+            .background(advice.themeColor.opacity(0.08))
+            .cornerRadius(16)
         }
         .cardStyle()
     }

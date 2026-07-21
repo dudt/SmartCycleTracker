@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 手动添加/编辑历史经期记录 Sheet
+/// 手动添加/编辑历史经期记录 Sheet (无专业术语，自然友好的极简界面)
 public struct AddHistoryCycleSheet: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -11,7 +11,6 @@ public struct AddHistoryCycleSheet: View {
     @State private var periodLength: Int = 5
     @State private var cycleLength: Int = 28
     @State private var isOutlier: Bool = false
-    @State private var outlierReason: String = ""
 
     public init(editingCycle: Cycle? = nil, onSave: @escaping (Cycle) -> Void) {
         self.editingCycle = editingCycle
@@ -22,30 +21,25 @@ public struct AddHistoryCycleSheet: View {
             _periodLength = State(initialValue: existing.periodLength ?? 5)
             _cycleLength = State(initialValue: existing.cycleLength ?? 28)
             _isOutlier = State(initialValue: existing.isOutlier)
-            _outlierReason = State(initialValue: existing.outlierReason ?? "")
         }
     }
 
     public var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("经期基础数据").font(.system(size: 13, weight: .semibold))) {
+                Section(header: Text("经期时间记录").font(.system(size: 13, weight: .semibold))) {
                     DatePicker("月经开始日期", selection: $startDate, displayedComponents: .date)
 
                     Stepper("经期持续天数: \(periodLength) 天", value: $periodLength, in: 1...14)
 
-                    Stepper("本周期总天数: \(cycleLength) 天", value: $cycleLength, in: 15...60)
+                    Stepper("周期天数: \(cycleLength) 天", value: $cycleLength, in: 15...60)
                 }
 
                 Section(
-                    header: Text("异常/离群记录说明").font(.system(size: 13, weight: .semibold)),
-                    footer: Text("标记为离群周期后，算法在计算平均值与 EMA 时会自动忽略此周期的干扰，使预测更准确。").font(.system(size: 12)).foregroundColor(.secondary)
+                    header: Text("特殊周期调节").font(.system(size: 13, weight: .semibold)),
+                    footer: Text("开启后，系统在智能预测时会自动调优此特殊周期的影响，让预测更贴合您的常态。").font(.system(size: 12)).foregroundColor(.secondary)
                 ) {
-                    Toggle("标记为异常离群周期", isOn: $isOutlier)
-
-                    if isOutlier {
-                        TextField("离群原因（如：服药、生病、长途时差等）", text: $outlierReason)
-                    }
+                    Toggle("本周期身体不适 / 服药 / 时差", isOn: $isOutlier)
                 }
             }
             .navigationTitle(editingCycle == nil ? "添加历史经期" : "编辑历史经期")
@@ -65,8 +59,7 @@ public struct AddHistoryCycleSheet: View {
                             endDate: endDate,
                             cycleLength: cycleLength,
                             periodLength: periodLength,
-                            isOutlier: isOutlier,
-                            outlierReason: isOutlier ? (outlierReason.isEmpty ? "手动标注异常" : outlierReason) : nil
+                            isOutlier: isOutlier
                         )
                         onSave(newCycle)
                         dismiss()

@@ -4,20 +4,22 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
+	<key>CFBundleDisplayName</key>
+	<string>思雨经期助手</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.smartcycle.tracker</string>
+	<string>com.siyu.periodtracker</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>SmartCycleTracker</string>
+	<string>思雨经期助手</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 
-	<!-- 开启全屏适配，防止 iOS 缩放到 3.5 寸小窗口模式 -->
+	<!-- 全屏适配 -->
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
@@ -33,6 +35,6 @@
 	</array>
 
 	<key>NSFaceIDUsageDescription</key>
-	<string>我们需要使用 Face ID 解锁以保护您的经期健康记录隐私</string>
+	<string>思雨经期助手需要使用 Face ID 解锁以保护您的健康记录隐私</string>
 </dict>
 </plist>

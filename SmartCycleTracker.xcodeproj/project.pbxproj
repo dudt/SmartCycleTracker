@@ -17,6 +17,8 @@
 		B1000009 /* DailyLogSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000009 /* DailyLogSheetView.swift */; };
 		B1000010 /* CycleDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000010 /* CycleDataStore.swift */; };
 		B1000011 /* AddHistoryCycleSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000011 /* AddHistoryCycleSheet.swift */; };
+		B1000012 /* CareAdviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000012 /* CareAdviceService.swift */; };
+		B1000013 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000013 /* NotificationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		F1000009 /* DailyLogSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/DailyLogSheetView.swift; sourceTree = "<group>"; };
 		F1000010 /* CycleDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CycleDataStore.swift; sourceTree = "<group>"; };
 		F1000011 /* AddHistoryCycleSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/AddHistoryCycleSheet.swift; sourceTree = "<group>"; };
+		F1000012 /* CareAdviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CareAdviceService.swift; sourceTree = "<group>"; };
+		F1000013 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 				F1000004 /* Models.swift */,
 				F1000005 /* PredictionEngine.swift */,
 				F1000010 /* CycleDataStore.swift */,
+				F1000012 /* CareAdviceService.swift */,
+				F1000013 /* NotificationManager.swift */,
 				F1000006 /* MainTabView.swift */,
 				F1000007 /* CycleWheelView.swift */,
 				F1000008 /* CalendarCardView.swift */,
@@ -144,6 +150,8 @@
 				B1000004 /* Models.swift in Sources */,
 				B1000005 /* PredictionEngine.swift in Sources */,
 				B1000010 /* CycleDataStore.swift in Sources */,
+				B1000012 /* CareAdviceService.swift in Sources */,
+				B1000013 /* NotificationManager.swift in Sources */,
 				B1000006 /* MainTabView.swift in Sources */,
 				B1000007 /* CycleWheelView.swift in Sources */,
 				B1000008 /* CalendarCardView.swift in Sources */,

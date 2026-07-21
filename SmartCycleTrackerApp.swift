@@ -16,7 +16,7 @@ struct SmartCycleTrackerApp: App {
                             .font(.system(size: 64))
                             .foregroundColor(Theme.periodRuby)
                         
-                        Text("SmartCycleTracker 隐私锁")
+                        Text("思雨经期助手 隐私锁")
                             .font(.system(size: 20, weight: .bold))
 
                         Text("经期数据已进行本地端侧安全加密保护")

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// 快捷打卡 Sheet 视图
+/// 快捷健康记录 Sheet 视图 (无 Emoji，支持水量与体重打卡)
 public struct DailyLogSheetView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -10,14 +10,15 @@ public struct DailyLogSheetView: View {
 
     @State private var flowLevel: Int? = nil
     @State private var bbtString: String = ""
+    @State private var waterIntake: Int = 1500
+    @State private var weightString: String = ""
     @State private var lhTestResult: String? = nil
     @State private var cervicalMucus: String? = nil
     @State private var selectedSymptoms: Set<String> = []
     @State private var selectedMoods: Set<String> = []
     @State private var notes: String = ""
 
-    // 可选标签列表
-    private let availableSymptoms = ["痛经", "腰酸", "痘痘", "头痛", "乳房胀痛", "腹胀感", "水肿", "失眠", "疲惫"]
+    private let availableSymptoms = ["腹痛", "腰酸", "痘痘", "头痛", "乳房胀痛", "腹胀", "水肿", "失眠", "疲惫"]
     private let availableMoods = ["平静", "开心", "焦虑", "易怒", "低落", "敏感", "充沛"]
 
     public init(
@@ -31,6 +32,8 @@ public struct DailyLogSheetView: View {
 
         _flowLevel = State(initialValue: existingLog?.flowLevel)
         _bbtString = State(initialValue: existingLog?.bbt != nil ? String(format: "%.2f", existingLog!.bbt!) : "")
+        _waterIntake = State(initialValue: existingLog?.waterIntake ?? 1500)
+        _weightString = State(initialValue: existingLog?.weight != nil ? String(format: "%.1f", existingLog!.weight!) : "")
         _lhTestResult = State(initialValue: existingLog?.lhTestResult)
         _cervicalMucus = State(initialValue: existingLog?.cervicalMucus)
         _selectedSymptoms = State(initialValue: Set(existingLog?.symptoms ?? []))
@@ -46,7 +49,7 @@ public struct DailyLogSheetView: View {
                     HStack {
                         Image(systemName: "calendar")
                             .foregroundColor(Theme.periodRuby)
-                        Text("打卡日期：\(dateString)")
+                        Text("记录日期：\(dateString)")
                             .font(.system(size: 16, weight: .semibold))
                     }
                 }
@@ -63,9 +66,31 @@ public struct DailyLogSheetView: View {
                     .padding(.vertical, 4)
                 }
 
-                // 2. 基础体温 (BBT) & 测纸
-                Section(header: Text("体温与排卵检测").font(.system(size: 13, weight: .semibold))) {
+                // 2. 饮水与体重健康打卡
+                Section(header: Text("日常健康打卡").font(.system(size: 13, weight: .semibold))) {
                     HStack {
+                        Image(systemName: "drop.circle.fill")
+                            .foregroundColor(Theme.fertileTeal)
+                        Text("今日饮水")
+                        Spacer()
+                        Stepper("\(waterIntake) ml", value: $waterIntake, in: 500...4000, step: 250)
+                    }
+
+                    HStack {
+                        Image(systemName: "scalemass.fill")
+                            .foregroundColor(Theme.lutealPurple)
+                        Text("今日体重")
+                        Spacer()
+                        TextField("例如 52.5", text: $weightString)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                        Text("kg")
+                            .foregroundColor(.secondary)
+                    }
+
+                    HStack {
+                        Image(systemName: "thermometer.medium")
+                            .foregroundColor(Theme.periodRuby)
                         Text("基础体温 (BBT)")
                         Spacer()
                         TextField("例如 36.65", text: $bbtString)
@@ -74,7 +99,10 @@ public struct DailyLogSheetView: View {
                         Text("℃")
                             .foregroundColor(.secondary)
                     }
+                }
 
+                // 3. 排卵与分泌物观察
+                Section(header: Text("排卵与体征观察").font(.system(size: 13, weight: .semibold))) {
                     Picker("排卵试纸结果", selection: $lhTestResult) {
                         Text("未测试").tag(nil as String?)
                         Text("阴性 (-)").tag("negative" as String?)
@@ -91,7 +119,7 @@ public struct DailyLogSheetView: View {
                     }
                 }
 
-                // 3. 身体症状
+                // 4. 身体症状
                 Section(header: Text("身体症状标签").font(.system(size: 13, weight: .semibold))) {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
@@ -113,7 +141,7 @@ public struct DailyLogSheetView: View {
                     .padding(.vertical, 4)
                 }
 
-                // 4. 情绪心理
+                // 5. 情绪状态
                 Section(header: Text("情绪状态").font(.system(size: 13, weight: .semibold))) {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
@@ -135,13 +163,13 @@ public struct DailyLogSheetView: View {
                     .padding(.vertical, 4)
                 }
 
-                // 5. 备注随手记
-                Section(header: Text("备注随手记").font(.system(size: 13, weight: .semibold))) {
+                // 6. 随手记
+                Section(header: Text("个人随手记").font(.system(size: 13, weight: .semibold))) {
                     TextEditor(text: $notes)
                         .frame(height: 80)
                 }
             }
-            .navigationTitle("记录健康日志")
+            .navigationTitle("添加健康日志")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -150,10 +178,14 @@ public struct DailyLogSheetView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") {
                         let bbtVal = Double(bbtString)
+                        let weightVal = Double(weightString)
+
                         let log = DailyLog(
                             date: dateString,
                             flowLevel: flowLevel,
                             bbt: bbtVal,
+                            waterIntake: waterIntake,
+                            weight: weightVal,
                             lhTestResult: lhTestResult,
                             cervicalMucus: cervicalMucus,
                             symptoms: Array(selectedSymptoms),
@@ -170,7 +202,6 @@ public struct DailyLogSheetView: View {
         }
     }
 
-    // 流量选择按钮
     private struct FlowButton: View {
         let level: Int
         let title: String
@@ -201,7 +232,6 @@ public struct DailyLogSheetView: View {
         }
     }
 
-    // 标签 Chip 组件
     private struct TagChip: View {
         let title: String
         let isSelected: Bool
@@ -226,4 +256,3 @@ public struct DailyLogSheetView: View {
         }
     }
 }
-

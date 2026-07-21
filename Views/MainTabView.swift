@@ -116,26 +116,34 @@ public struct MainTabView: View {
                         HStack {
                             Text("默认周期天数")
                             Spacer()
-                            Stepper("\(userProfile.defaultCycleLength) 天", value: $userProfile.defaultCycleLength, in: 20...45)
-                                .onChange(of: userProfile.defaultCycleLength) { _, _ in saveUserProfile() }
+                            Stepper("\(userProfile.defaultCycleLength) 天", value: Binding(
+                                get: { userProfile.defaultCycleLength },
+                                set: { userProfile.defaultCycleLength = $0; saveUserProfile() }
+                            ), in: 20...45)
                         }
                         HStack {
                             Text("默认经期天数")
                             Spacer()
-                            Stepper("\(userProfile.defaultPeriodLength) 天", value: $userProfile.defaultPeriodLength, in: 2...10)
-                                .onChange(of: userProfile.defaultPeriodLength) { _, _ in saveUserProfile() }
+                            Stepper("\(userProfile.defaultPeriodLength) 天", value: Binding(
+                                get: { userProfile.defaultPeriodLength },
+                                set: { userProfile.defaultPeriodLength = $0; saveUserProfile() }
+                            ), in: 2...10)
                         }
                         HStack {
                             Text("默认黄体期")
                             Spacer()
-                            Stepper("\(userProfile.lutealPhaseLength) 天", value: $userProfile.lutealPhaseLength, in: 10...16)
-                                .onChange(of: userProfile.lutealPhaseLength) { _, _ in saveUserProfile() }
+                            Stepper("\(userProfile.lutealPhaseLength) 天", value: Binding(
+                                get: { userProfile.lutealPhaseLength },
+                                set: { userProfile.lutealPhaseLength = $0; saveUserProfile() }
+                            ), in: 10...16)
                         }
                     }
 
                     Section(header: Text("隐私与安全")) {
-                        Toggle("开启应用锁 (Face ID / 密码)", isOn: $userProfile.isPrivacyLockEnabled)
-                            .onChange(of: userProfile.isPrivacyLockEnabled) { _, _ in saveUserProfile() }
+                        Toggle("开启应用锁 (Face ID / 密码)", isOn: Binding(
+                            get: { userProfile.isPrivacyLockEnabled },
+                            set: { userProfile.isPrivacyLockEnabled = $0; saveUserProfile() }
+                        ))
                         HStack {
                             Image(systemName: "lock.shield.fill")
                                 .foregroundColor(Theme.fertileTeal)

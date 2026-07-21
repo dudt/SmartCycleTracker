@@ -61,10 +61,10 @@ public struct CalendarCardView: View {
             }
 
             // 日期网格 (Grid)
-            let days = generateDaysInMonth(for: currentMonthDate)
+            let dayItems = generateDaysInMonth(for: currentMonthDate)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
-                ForEach(days, id: \.self) { dateItem in
-                    if let date = dateItem {
+                ForEach(dayItems) { item in
+                    if let date = item.date {
                         DayCell(
                             date: date,
                             isSelected: calendar.isDate(date, inSameDayAs: selectedDate),
@@ -223,20 +223,33 @@ public struct CalendarCardView: View {
         return df.string(from: date)
     }
 
-    private func generateDaysInMonth(for date: Date) -> [Date?] {
+    private func generateDaysInMonth(for date: Date) -> [CalendarDayItem] {
         guard let monthInterval = calendar.dateInterval(of: .month, for: date),
               let firstDayWeekday = calendar.dateComponents([.weekday], from: monthInterval.start).weekday else {
             return []
         }
 
-        var days: [Date?] = Array(repeating: nil, count: firstDayWeekday - 1)
-        var currentDate = monthInterval.start
+        var items: [CalendarDayItem] = []
+        var idCounter = 0
 
+        for _ in 0..<(firstDayWeekday - 1) {
+            items.append(CalendarDayItem(id: idCounter, date: nil))
+            idCounter += 1
+        }
+
+        var currentDate = monthInterval.start
         while currentDate < monthInterval.end {
-            days.append(currentDate)
+            items.append(CalendarDayItem(id: idCounter, date: currentDate))
+            idCounter += 1
             guard let next = calendar.date(byAdding: .day, value: 1, to: currentDate) else { break }
             currentDate = next
         }
-        return days
+        return items
     }
+}
+
+/// 月历单元节点结构
+struct CalendarDayItem: Identifiable {
+    let id: Int
+    let date: Date?
 }

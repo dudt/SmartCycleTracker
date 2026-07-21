@@ -76,18 +76,18 @@ public struct DailyLogSheetView: View {
                     }
 
                     Picker("排卵试纸结果", selection: $lhTestResult) {
-                        Text("未测试").tag(String?.none)
-                        Text("阴性 (-)").tag(String?.some("negative"))
-                        Text("阳性 (+)").tag(String?.some("positive"))
-                        Text("强阳/峰值 (Peak)").tag(String?.some("peak"))
+                        Text("未测试").tag(nil as String?)
+                        Text("阴性 (-)").tag("negative" as String?)
+                        Text("阳性 (+)").tag("positive" as String?)
+                        Text("强阳/峰值 (Peak)").tag("peak" as String?)
                     }
 
                     Picker("宫颈黏液", selection: $cervicalMucus) {
-                        Text("未观察").tag(String?.none)
-                        Text("干燥 (Dry)").tag(String?.some("dry"))
-                        Text("粘稠 (Sticky)").tag(String?.some("sticky"))
-                        Text("乳液状 (Creamy)").tag(String?.some("creamy"))
-                        Text("蛋清状 (Egg White)").tag(String?.some("eggWhite"))
+                        Text("未观察").tag(nil as String?)
+                        Text("干燥 (Dry)").tag("dry" as String?)
+                        Text("粘稠 (Sticky)").tag("sticky" as String?)
+                        Text("乳液状 (Creamy)").tag("creamy" as String?)
+                        Text("蛋清状 (Egg White)").tag("eggWhite" as String?)
                     }
                 }
 

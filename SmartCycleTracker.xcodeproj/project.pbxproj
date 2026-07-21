@@ -19,6 +19,7 @@
 		B1000011 /* AddHistoryCycleSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000011 /* AddHistoryCycleSheet.swift */; };
 		B1000012 /* CareAdviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000012 /* CareAdviceService.swift */; };
 		B1000013 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000013 /* NotificationManager.swift */; };
+		B1000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1000020 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		F1000011 /* AddHistoryCycleSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/AddHistoryCycleSheet.swift; sourceTree = "<group>"; };
 		F1000012 /* CareAdviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CareAdviceService.swift; sourceTree = "<group>"; };
 		F1000013 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
+		F1000020 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			children = (
 				F1000001 /* SmartCycleTrackerApp.swift */,
 				F1000002 /* Info.plist */,
+				F1000020 /* Assets.xcassets */,
 				F1000003 /* Theme.swift */,
 				F1000004 /* Models.swift */,
 				F1000005 /* PredictionEngine.swift */,
@@ -135,6 +138,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1000020 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +171,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
@@ -181,7 +186,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.smartcycle.tracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.siyu.periodtracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -193,6 +198,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
@@ -207,7 +213,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.smartcycle.tracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.siyu.periodtracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;

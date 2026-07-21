@@ -7,6 +7,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_NODE_TYPE: node20
+
 jobs:
   build:
     name: Build Unsigned IPA for Sideloading
@@ -46,9 +49,10 @@ jobs:
           echo "===== 编译失败，输出详细错误日志 ====="
           grep -i -C 3 "error:" xcodebuild.log || tail -n 100 xcodebuild.log
 
-      - name: Verify Compiled App Bundle
+      - name: Verify Compiled App Bundle & Icon Assets
         run: |
           ls -la build/Build/Products/Release-iphoneos/
+          ls -la build/Build/Products/Release-iphoneos/SmartCycleTracker.app/
           du -sh build/Build/Products/Release-iphoneos/SmartCycleTracker.app
 
       - name: Package to IPA Format (Payload/SmartCycleTracker.app)
@@ -64,6 +68,6 @@ jobs:
       - name: Upload Unsigned IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SmartCycleTracker-Unsigned-IPA
+          name: 思雨经期助手-IPA
           path: SmartCycleTracker.ipa
           retention-days: 30

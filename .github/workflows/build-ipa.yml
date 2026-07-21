@@ -24,58 +24,34 @@ jobs:
       - name: Show Xcode & SDK Info
         run: |
           xcodebuild -version
-          xcrun --sdk iphoneos --show-sdk-path
+          xcodebuild -showsdks
 
-      - name: Compile & Build iOS App Bundle
+      - name: Build Xcode App (Unsigned)
         run: |
-          APP_DIR="build/Build/Products/Release-iphoneos/SmartCycleTracker.app"
-          mkdir -p "$APP_DIR"
+          xcodebuild build \
+            -project SmartCycleTracker.xcodeproj \
+            -scheme SmartCycleTracker \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
 
-          if [ -d "SmartCycleTracker.xcodeproj" ]; then
-            echo "检测到 SmartCycleTracker.xcodeproj，使用 xcodebuild 编译..."
-            xcodebuild build \
-              -project SmartCycleTracker.xcodeproj \
-              -scheme SmartCycleTracker \
-              -sdk iphoneos \
-              -configuration Release \
-              -derivedDataPath build \
-              CODE_SIGN_IDENTITY="" \
-              CODE_SIGNING_REQUIRED=NO \
-              CODE_SIGNING_ALLOWED=NO
-          else
-            echo "未检测到 .xcodeproj，使用 swiftc 编译器直接编译 iOS 原生 App 二进制..."
-            
-            SDK_PATH=$(xcrun --sdk iphoneos --show-sdk-path)
-            SWIFT_FILES=$(find . -name "*.swift" -not -path "*/Tests/*" -not -path "*/build/*")
-            
-            echo "正在编译的 Swift 文件源："
-            echo "$SWIFT_FILES"
-            
-            swiftc -sdk "$SDK_PATH" \
-                   -target arm64-apple-ios17.0 \
-                   -parse-as-library \
-                   -O \
-                   -emit-executable \
-                   -o "$APP_DIR/SmartCycleTracker" \
-                   $SWIFT_FILES
-            
-            if [ -f "Info.plist" ]; then
-              cp Info.plist "$APP_DIR/Info.plist"
-            else
-              cp SmartCycleTracker/Info.plist "$APP_DIR/Info.plist" 2>/dev/null || true
-            fi
-            
-            echo "APPL????" > "$APP_DIR/PkgInfo"
-            echo "App 包可执行二进制编译完成！"
-          fi
+      - name: Verify Compiled App Bundle
+        run: |
+          ls -la build/Build/Products/Release-iphoneos/
+          du -sh build/Build/Products/Release-iphoneos/SmartCycleTracker.app
 
       - name: Package to IPA Format (Payload/SmartCycleTracker.app)
         run: |
           mkdir -p Payload
-          cp -R build/Build/Products/Release-iphoneos/*.app Payload/
+          cp -R build/Build/Products/Release-iphoneos/SmartCycleTracker.app Payload/
           zip -r SmartCycleTracker.ipa Payload
           rm -rf Payload
-          echo "IPA 打包完成：SmartCycleTracker.ipa"
+          
+          echo "检查生成的 IPA 文件体积与明细："
+          ls -lh SmartCycleTracker.ipa
 
       - name: Upload Unsigned IPA Artifact
         uses: actions/upload-artifact@v4

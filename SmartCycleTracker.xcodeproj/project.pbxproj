@@ -1,0 +1,256 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B1000001 /* SmartCycleTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000001 /* SmartCycleTrackerApp.swift */; };
+		B1000003 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000003 /* Theme.swift */; };
+		B1000004 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000004 /* Models.swift */; };
+		B1000005 /* PredictionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000005 /* PredictionEngine.swift */; };
+		B1000006 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000006 /* MainTabView.swift */; };
+		B1000007 /* CycleWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000007 /* CycleWheelView.swift */; };
+		B1000008 /* CalendarCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000008 /* CalendarCardView.swift */; };
+		B1000009 /* DailyLogSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000009 /* DailyLogSheetView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1000008 /* SmartCycleTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartCycleTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1000001 /* SmartCycleTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartCycleTrackerApp.swift; sourceTree = "<group>"; };
+		F1000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1000003 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers/Theme.swift; sourceTree = "<group>"; };
+		F1000004 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/Models.swift; sourceTree = "<group>"; };
+		F1000005 /* PredictionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PredictionEngine.swift; sourceTree = "<group>"; };
+		F1000006 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/MainTabView.swift; sourceTree = "<group>"; };
+		F1000007 /* CycleWheelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CycleWheelView.swift; sourceTree = "<group>"; };
+		F1000008 /* CalendarCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CalendarCardView.swift; sourceTree = "<group>"; };
+		F1000009 /* DailyLogSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/DailyLogSheetView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000006 /* MainGroup */ = {
+			isa = PBXGroup;
+			children = (
+				F1000001 /* SmartCycleTrackerApp.swift */,
+				F1000002 /* Info.plist */,
+				F1000003 /* Theme.swift */,
+				F1000004 /* Models.swift */,
+				F1000005 /* PredictionEngine.swift */,
+				F1000006 /* MainTabView.swift */,
+				F1000007 /* CycleWheelView.swift */,
+				F1000008 /* CalendarCardView.swift */,
+				F1000009 /* DailyLogSheetView.swift */,
+				A1000007 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1000007 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000008 /* SmartCycleTracker.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000002 /* SmartCycleTracker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1000000 /* Build configuration list for PBXNativeTarget "SmartCycleTracker" */;
+			buildPhases = (
+				A1000003 /* Sources */,
+				A1000004 /* Frameworks */,
+				A1000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SmartCycleTracker;
+			productName = SmartCycleTracker;
+			productReference = A1000008 /* SmartCycleTracker.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A1000002 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = C1000005 /* Build configuration list for PBXProject "SmartCycleTracker" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000006 /* MainGroup */;
+			productRefGroup = A1000007 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000002 /* SmartCycleTracker */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1000005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1000001 /* SmartCycleTrackerApp.swift in Sources */,
+				B1000003 /* Theme.swift in Sources */,
+				B1000004 /* Models.swift in Sources */,
+				B1000005 /* PredictionEngine.swift in Sources */,
+				B1000006 /* MainTabView.swift in Sources */,
+				B1000007 /* CycleWheelView.swift in Sources */,
+				B1000008 /* CalendarCardView.swift in Sources */,
+				B1000009 /* DailyLogSheetView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C1000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.smartcycle.tracker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C1000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.smartcycle.tracker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C1000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C1000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C1000000 /* Build configuration list for PBXNativeTarget "SmartCycleTracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1000001 /* Debug */,
+				C1000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1000005 /* Build configuration list for PBXProject "SmartCycleTracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1000003 /* Debug */,
+				C1000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1000001 /* Project object */;
+}

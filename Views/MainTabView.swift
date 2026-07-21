@@ -65,7 +65,7 @@ public struct MainTabView: View {
                 .navigationBarTitleDisplayMode(.inline)
             }
             .tabItem {
-                Label("仪表盘", systemName: "heart.circle.fill")
+                Label("仪表盘", systemImage: "heart.circle.fill")
             }
             .tag(0)
 
@@ -90,7 +90,7 @@ public struct MainTabView: View {
                 .navigationTitle("周期统计")
             }
             .tabItem {
-                Label("数据统计", systemName: "chart.bar.fill")
+                Label("数据统计", systemImage: "chart.bar.fill")
             }
             .tag(1)
 
@@ -129,7 +129,7 @@ public struct MainTabView: View {
                 .navigationTitle("个人设置")
             }
             .tabItem {
-                Label("设置", systemName: "gearshape.fill")
+                Label("设置", systemImage: "gearshape.fill")
             }
             .tag(2)
         }
@@ -242,13 +242,13 @@ struct SelectedDateSummaryCard: View {
             if let log = dailyLog {
                 HStack(spacing: 16) {
                     if let flow = log.flowLevel {
-                        Label("流量: Level \(flow)", systemName: "drop.fill")
+                        Label("流量: Level \(flow)", systemImage: "drop.fill")
                             .font(.system(size: 13))
                             .foregroundColor(Theme.periodRuby)
                     }
 
                     if let bbt = log.bbt {
-                        Label(String(format: "%.2f℃", bbt), systemName: "thermometer.medium")
+                        Label(String(format: "%.2f℃", bbt), systemImage: "thermometer.medium")
                             .font(.system(size: 13))
                             .foregroundColor(Theme.fertileTeal)
                     }

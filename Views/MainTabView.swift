@@ -5,9 +5,11 @@ public struct MainTabView: View {
     @State private var userProfile = UserProfile()
     @State private var historyCycles: [Cycle] = []
     @State private var dailyLogs: [String: DailyLog] = [:]
-    
+
     @State private var selectedDate: Date = Date()
     @State private var isLogSheetPresented: Bool = false
+    @State private var isAddHistorySheetPresented: Bool = false
+    @State private var editingCycle: Cycle? = nil
     @State private var activeTab: Int = 0
 
     // 计算得到的预测结果
@@ -69,7 +71,7 @@ public struct MainTabView: View {
             }
             .tag(0)
 
-            // TAB 2: 趋势与规律分析
+            // TAB 2: 趋势与历史记录
             NavigationView {
                 ScrollView {
                     VStack(spacing: 16) {
@@ -81,13 +83,26 @@ public struct MainTabView: View {
                             outliersCount: predictionResult.outliersCount
                         )
 
-                        // 历史周期列表
-                        HistoryCyclesListCard(historyCycles: historyCycles)
+                        // 历史周期记录列表 (包含添加/删除功能)
+                        HistoryCyclesListCard(
+                            historyCycles: historyCycles,
+                            onAddTap: {
+                                editingCycle = nil
+                                isAddHistorySheetPresented = true
+                            },
+                            onDelete: { cycle in
+                                deleteCycle(cycle)
+                            },
+                            onEdit: { cycle in
+                                editingCycle = cycle
+                                isAddHistorySheetPresented = true
+                            }
+                        )
                     }
                     .padding(16)
                 }
                 .background(Theme.backgroundGradient.ignoresSafeArea())
-                .navigationTitle("周期统计")
+                .navigationTitle("周期统计与历史")
             }
             .tabItem {
                 Label("数据统计", systemImage: "chart.bar.fill")
@@ -102,25 +117,29 @@ public struct MainTabView: View {
                             Text("默认周期天数")
                             Spacer()
                             Stepper("\(userProfile.defaultCycleLength) 天", value: $userProfile.defaultCycleLength, in: 20...45)
+                                .onChange(of: userProfile.defaultCycleLength) { _ in saveUserProfile() }
                         }
                         HStack {
                             Text("默认经期天数")
                             Spacer()
                             Stepper("\(userProfile.defaultPeriodLength) 天", value: $userProfile.defaultPeriodLength, in: 2...10)
+                                .onChange(of: userProfile.defaultPeriodLength) { _ in saveUserProfile() }
                         }
                         HStack {
                             Text("默认黄体期")
                             Spacer()
                             Stepper("\(userProfile.lutealPhaseLength) 天", value: $userProfile.lutealPhaseLength, in: 10...16)
+                                .onChange(of: userProfile.lutealPhaseLength) { _ in saveUserProfile() }
                         }
                     }
 
                     Section(header: Text("隐私与安全")) {
                         Toggle("开启应用锁 (Face ID / 密码)", isOn: $userProfile.isPrivacyLockEnabled)
+                            .onChange(of: userProfile.isPrivacyLockEnabled) { _ in saveUserProfile() }
                         HStack {
                             Image(systemName: "lock.shield.fill")
                                 .foregroundColor(Theme.fertileTeal)
-                            Text("所有数据均保存在本地，无云端同步")
+                            Text("所有数据均保存在本地沙盒，无任何云端同步")
                                 .font(.system(size: 13))
                                 .foregroundColor(.secondary)
                         }
@@ -135,7 +154,7 @@ public struct MainTabView: View {
         }
         .accentColor(Theme.periodRuby)
         .onAppear {
-            loadInitialMockDataIfNeeded()
+            loadLocalData()
         }
         .sheet(isPresented: $isLogSheetPresented) {
             DailyLogSheetView(
@@ -143,16 +162,67 @@ public struct MainTabView: View {
                 existingLog: dailyLogs[selectedDateString]
             ) { updatedLog in
                 dailyLogs[updatedLog.date] = updatedLog
-                
-                // 如果勾选了经期流量，自动更新/追加经期开始记录
+                CycleDataStore.saveDailyLogs(dailyLogs)
+
                 if (updatedLog.flowLevel ?? 0) > 0 {
                     checkAndUpdateCycleRecord(for: updatedLog.date)
                 }
             }
         }
+        .sheet(isPresented: $isAddHistorySheetPresented) {
+            AddHistoryCycleSheet(editingCycle: editingCycle) { savedCycle in
+                if let index = historyCycles.firstIndex(where: { $0.id == savedCycle.id }) {
+                    historyCycles[index] = savedCycle
+                } else {
+                    historyCycles.append(savedCycle)
+                }
+                saveCycles()
+            }
+        }
     }
 
-    // MARK: - 状态辅助计算
+    // MARK: - 本地持久化与辅助计算
+    private func loadLocalData() {
+        let loadedCycles = CycleDataStore.loadCycles()
+        let loadedLogs = CycleDataStore.loadDailyLogs()
+        let loadedProfile = CycleDataStore.loadProfile()
+
+        self.userProfile = loadedProfile
+        self.dailyLogs = loadedLogs
+
+        if loadedCycles.isEmpty {
+            // 提供演示初始数据
+            let cal = Calendar.current
+            let now = Date()
+            let c1Start = cal.date(byAdding: .day, value: -56, to: now)!
+            let c1End = cal.date(byAdding: .day, value: -29, to: now)!
+            let c1 = Cycle(startDate: c1Start, endDate: c1End, cycleLength: 28, periodLength: 5)
+
+            let c2Start = cal.date(byAdding: .day, value: -28, to: now)!
+            let c2End = cal.date(byAdding: .day, value: -1, to: now)!
+            let c2 = Cycle(startDate: c2Start, endDate: c2End, cycleLength: 28, periodLength: 5)
+
+            self.historyCycles = [c1, c2]
+            CycleDataStore.saveCycles(self.historyCycles)
+        } else {
+            self.historyCycles = loadedCycles
+        }
+    }
+
+    private func saveCycles() {
+        self.historyCycles.sort(by: { $0.startDate < $1.startDate })
+        CycleDataStore.saveCycles(self.historyCycles)
+    }
+
+    private func saveUserProfile() {
+        CycleDataStore.saveProfile(self.userProfile)
+    }
+
+    private func deleteCycle(_ cycle: Cycle) {
+        historyCycles.removeAll(where: { $0.id == cycle.id })
+        saveCycles()
+    }
+
     private func calculateCurrentDayInCycle() -> Int {
         guard let lastCycle = historyCycles.sorted(by: { $0.startDate < $1.startDate }).last else {
             return 1
@@ -184,176 +254,100 @@ public struct MainTabView: View {
         df.dateFormat = "yyyy-MM-dd"
         guard let logDate = df.date(from: dateStr) else { return }
 
-        // 如果与上个周期相隔超过 15 天，认为是新周期开始
         if let lastCycle = historyCycles.sorted(by: { $0.startDate < $1.startDate }).last {
             let diff = Calendar.current.dateComponents([.day], from: lastCycle.startDate, to: logDate).day ?? 0
             if diff >= 15 {
                 var updatedLast = lastCycle
                 updatedLast.endDate = Calendar.current.date(byAdding: .day, value: -1, to: logDate)
                 updatedLast.cycleLength = diff
-                
-                let newCycle = Cycle(startDate: logDate, periodLength: 5)
+                if let idx = historyCycles.firstIndex(where: { $0.id == lastCycle.id }) {
+                    historyCycles[idx] = updatedLast
+                }
+
+                let newCycle = Cycle(startDate: logDate, periodLength: userProfile.defaultPeriodLength)
                 historyCycles.append(newCycle)
+                saveCycles()
             }
         } else {
-            let firstCycle = Cycle(startDate: logDate, periodLength: 5)
+            let firstCycle = Cycle(startDate: logDate, periodLength: userProfile.defaultPeriodLength)
             historyCycles.append(firstCycle)
-        }
-    }
-
-    private func loadInitialMockDataIfNeeded() {
-        if historyCycles.isEmpty {
-            let cal = Calendar.current
-            let now = Date()
-            
-            // 生成2个最近的示例历史周期数据
-            let c1Start = cal.date(byAdding: .day, value: -56, to: now)!
-            let c1End = cal.date(byAdding: .day, value: -29, to: now)!
-            let c1 = Cycle(startDate: c1Start, endDate: c1End, cycleLength: 28, periodLength: 5)
-
-            let c2Start = cal.date(byAdding: .day, value: -28, to: now)!
-            let c2End = cal.date(byAdding: .day, value: -1, to: now)!
-            let c2 = Cycle(startDate: c2Start, endDate: c2End, cycleLength: 28, periodLength: 5)
-
-            historyCycles = [c1, c2]
+            saveCycles()
         }
     }
 }
 
-// MARK: - 选中日期摘要明细卡片
-struct SelectedDateSummaryCard: View {
-    let dateString: String
-    let dailyLog: DailyLog?
-    let onEditTap: () -> Void
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("📅 \(dateString) 日志明细")
-                    .font(.system(size: 15, weight: .bold))
-                Spacer()
-                Button(action: onEditTap) {
-                    Text(dailyLog == nil ? "添加打卡" : "编辑日志")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(Theme.periodRuby)
-                }
-            }
-
-            if let log = dailyLog {
-                HStack(spacing: 16) {
-                    if let flow = log.flowLevel {
-                        Label("流量: Level \(flow)", systemImage: "drop.fill")
-                            .font(.system(size: 13))
-                            .foregroundColor(Theme.periodRuby)
-                    }
-
-                    if let bbt = log.bbt {
-                        Label(String(format: "%.2f℃", bbt), systemImage: "thermometer.medium")
-                            .font(.system(size: 13))
-                            .foregroundColor(Theme.fertileTeal)
-                    }
-                }
-
-                if !log.symptoms.isEmpty {
-                    Text("症状：\(log.symptoms.joined(separator: " / "))")
-                        .font(.system(size: 13))
-                        .foregroundColor(.secondary)
-                }
-
-                if !log.moods.isEmpty {
-                    Text("情绪：\(log.moods.joined(separator: " / "))")
-                        .font(.system(size: 13))
-                        .foregroundColor(.secondary)
-                }
-
-                if let notes = log.notes, !notes.isEmpty {
-                    Text("备注：\(notes)")
-                        .font(.system(size: 13))
-                        .foregroundColor(.secondary)
-                }
-            } else {
-                Text("当日暂无详细打卡，点击右上角进行添加。")
-                    .font(.system(size: 13))
-                    .foregroundColor(.secondary)
-            }
-        }
-        .cardStyle()
-    }
-}
-
-// MARK: - 统计分析卡片
-struct StatsOverviewCard: View {
-    let avgCycleLength: Int
-    let avgPeriodLength: Int
-    let totalCyclesCount: Int
-    let outliersCount: Int
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("规律性概览")
-                .font(.system(size: 16, weight: .bold))
-
-            HStack {
-                StatItem(title: "平均周期", value: "\(avgCycleLength) 天")
-                Divider()
-                StatItem(title: "平均经期", value: "\(avgPeriodLength) 天")
-                Divider()
-                StatItem(title: "有效记录", value: "\(totalCyclesCount) 次")
-            }
-        }
-        .cardStyle()
-    }
-
-    private struct StatItem: View {
-        let title: String
-        let value: String
-
-        var body: some View {
-            VStack(spacing: 4) {
-                Text(title)
-                    .font(.system(size: 12))
-                    .foregroundColor(.secondary)
-                Text(value)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(Theme.periodRuby)
-            }
-            .frame(maxWidth: .infinity)
-        }
-    }
-}
-
+// MARK: - 历史周期数据展示列表 (带添加与删除按钮)
 struct HistoryCyclesListCard: View {
     let historyCycles: [Cycle]
+    let onAddTap: () -> Void
+    let onDelete: (Cycle) -> Void
+    let onEdit: (Cycle) -> Void
 
     private let df: DateFormatter = {
         let f = DateFormatter()
-        f.dateFormat = "yyyy-MM-dd"
+        f.dateFormat = "yyyy年M月d日"
         return f
     }()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("历史周期记录")
-                .font(.system(size: 16, weight: .bold))
+            HStack {
+                Text("历史周期记录")
+                    .font(.system(size: 16, weight: .bold))
+                Spacer()
+                Button(action: onAddTap) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "plus.circle.fill")
+                        Text("添加历史经期")
+                    }
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Theme.periodRuby)
+                }
+            }
 
-            ForEach(historyCycles.sorted(by: { $0.startDate > $1.startDate })) { cycle in
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(df.string(from: cycle.startDate))
-                            .font(.system(size: 14, weight: .semibold))
-                        if cycle.isOutlier {
-                            Text("异常离群周期 (\(cycle.outlierReason ?? "未标注"))")
-                                .font(.system(size: 11))
-                                .foregroundColor(.orange)
+            if historyCycles.isEmpty {
+                Text("暂无历史记录，点击右上角添加历史经期。")
+                    .font(.system(size: 13))
+                    .foregroundColor(.secondary)
+                    .padding(.vertical, 8)
+            } else {
+                ForEach(historyCycles.sorted(by: { $0.startDate > $1.startDate })) { cycle in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(df.string(from: cycle.startDate))
+                                .font(.system(size: 14, weight: .semibold))
+                            
+                            if cycle.isOutlier {
+                                Text("⚠️ 离群周期 (\(cycle.outlierReason ?? "手动标注"))")
+                                    .font(.system(size: 11))
+                                    .foregroundColor(.orange)
+                            } else {
+                                Text("经期: \(cycle.periodLength ?? 5)天 / 周期: \(cycle.cycleLength ?? 28)天")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+
+                        Spacer()
+
+                        // 编辑与删除操作按钮
+                        HStack(spacing: 12) {
+                            Button(action: { onEdit(cycle) }) {
+                                Image(systemName: "pencil")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.blue)
+                            }
+
+                            Button(action: { onDelete(cycle) }) {
+                                Image(systemName: "trash")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.red)
+                            }
                         }
                     }
-                    Spacer()
-                    Text("\(cycle.cycleLength ?? 28) 天")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundColor(Theme.periodRuby)
+                    .padding(.vertical, 6)
+                    Divider()
                 }
-                .padding(.vertical, 4)
-                Divider()
             }
         }
         .cardStyle()

@@ -15,6 +15,8 @@
 		B1000007 /* CycleWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000007 /* CycleWheelView.swift */; };
 		B1000008 /* CalendarCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000008 /* CalendarCardView.swift */; };
 		B1000009 /* DailyLogSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000009 /* DailyLogSheetView.swift */; };
+		B1000010 /* CycleDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000010 /* CycleDataStore.swift */; };
+		B1000011 /* AddHistoryCycleSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000011 /* AddHistoryCycleSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		F1000007 /* CycleWheelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CycleWheelView.swift; sourceTree = "<group>"; };
 		F1000008 /* CalendarCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CalendarCardView.swift; sourceTree = "<group>"; };
 		F1000009 /* DailyLogSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/DailyLogSheetView.swift; sourceTree = "<group>"; };
+		F1000010 /* CycleDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CycleDataStore.swift; sourceTree = "<group>"; };
+		F1000011 /* AddHistoryCycleSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/AddHistoryCycleSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,10 +53,12 @@
 				F1000003 /* Theme.swift */,
 				F1000004 /* Models.swift */,
 				F1000005 /* PredictionEngine.swift */,
+				F1000010 /* CycleDataStore.swift */,
 				F1000006 /* MainTabView.swift */,
 				F1000007 /* CycleWheelView.swift */,
 				F1000008 /* CalendarCardView.swift */,
 				F1000009 /* DailyLogSheetView.swift */,
+				F1000011 /* AddHistoryCycleSheet.swift */,
 				A1000007 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -137,10 +143,12 @@
 				B1000003 /* Theme.swift in Sources */,
 				B1000004 /* Models.swift in Sources */,
 				B1000005 /* PredictionEngine.swift in Sources */,
+				B1000010 /* CycleDataStore.swift in Sources */,
 				B1000006 /* MainTabView.swift in Sources */,
 				B1000007 /* CycleWheelView.swift in Sources */,
 				B1000008 /* CalendarCardView.swift in Sources */,
 				B1000009 /* DailyLogSheetView.swift in Sources */,
+				B1000011 /* AddHistoryCycleSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

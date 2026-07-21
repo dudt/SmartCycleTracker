@@ -17,6 +17,21 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 
+	<!-- 开启全屏适配，防止 iOS 缩放到 3.5 寸小窗口模式 -->
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+
 	<key>NSFaceIDUsageDescription</key>
 	<string>我们需要使用 Face ID 解锁以保护您的经期健康记录隐私</string>
 </dict>
